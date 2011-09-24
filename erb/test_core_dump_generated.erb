@@ -1,0 +1,82 @@
+#!/usr/bin/ksh
+
+if [[ -z $script_root ]]; then
+    script_root=`dirname $0`
+fi
+
+mymail="<%= params[:mymail] %>"
+mail_to="<%= params[:mail_to] %>"
+mail_cc="<%= params[:mail_cc].to_a.join(' ') %>"
+
+echo $0 STARTS AT `date` 
+
+src_list="<%= params[:core_dump_location].join(' ') %>"
+pattern_list="<%= params[:core_dump_pattern].join(' ') %>"
+dest="<%= params[:backup_location] %>"
+zip="<%= params[:zip_command] %>"
+
+timestamp=`date +"%Y_%m_%d_%H_%M_%S"`
+mail_body_file="/tmp/auto_alert_mail_$timestamp"
+
+for src in $src_list ; do
+
+  for pattern in $pattern_list ; do
+    cd $src
+    nfiles=`ls $pattern 2>/dev/null | wc -l`
+
+    echo "--- no of $src/$pattern is $nfiles"
+
+    if [ $nfiles -gt 0 ]; then
+       echo "\n# list of core dump files " >> $mail_body_file
+       echo "\nls -l $src/$pattern" >> $mail_body_file
+       
+       ls -l $src/$pattern >> $mail_body_file
+
+       echo "\n# auto-execute the following commands" >> $mail_body_file
+
+       echo "--- move $src/$pattern to $dest using $zip"
+
+       echo "--- mkdir -p $dest"
+       
+       mkdir -p $dest
+       
+       timestamp=`date +"%Y_%m_%d_%H_%M_%S"`
+
+       cd $src
+
+       zip_cmds="/tmp/move_to_backup_zip_cmds_$timestamp"
+       ls $pattern 2>/dev/null | awk -v zip=$zip -v dest=$dest -v src=$src '{printf("%s cvf %s/%s.zip %s/%s\n",zip,dest,$1,src,$1);}' > $zip_cmds
+
+       cat $zip_cmds >> $mail_body_file
+       cat $zip_cmds | sh >> $mail_body_file 2>&1
+       echo >> $mail_body_file
+       
+       rm_f_cmds="/tmp/move_to_backup_rm_f_cmds_$timestamp"
+       ls $pattern 2>/dev/null | awk -v src=$src '{printf("rm -f %s/%s\n",src,$1);}' > $rm_f_cmds
+
+       cat $rm_f_cmds >> $mail_body_file
+       cat $rm_f_cmds | sh >> $mail_body_file 2>&1
+       echo >> $mail_body_file
+       
+       rm -f $zip_cmds
+       rm -f $rm_f_cmds
+
+    fi
+ 
+  done
+
+done
+
+if [ -e $mail_body_file ]; then
+
+  host=`hostname`
+  subject="<%=params[:name]%> (<%=params[:host] %>) : generates core dump"
+
+  mail -s "$subject" -c"$mail_cc" -r"$mymail" $mail_to < $mail_body_file
+
+  rm $mail_body_file 
+fi
+
+echo $0 COMPLETES AT `date` 
+
+exit 0

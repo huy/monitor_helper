@@ -1,0 +1,4 @@
+#!/usr/bin/ksh
+
+mail -s <%=params[:subject].strip.dump%> -c "<%=params[:cc].to_a.join(' ')%>" -r <%=params[:mymail]%> <%=params[:to]%> < <%=params[:mail_body_file]%>
+

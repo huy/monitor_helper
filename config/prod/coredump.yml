@@ -1,0 +1,25 @@
+:socket_port: 9986
+:job_type: ExecuteScriptJob
+:script_file: erb/test_core_dump_generated.erb 
+:verbose: false
+:mymail: monitoring@mydomain
+:zip_command: /usr/java14/bin/jar
+:core_dump_pattern:
+  - heapdump*
+  - javacore*
+:backup_location: /backup/coredump
+:mail_to: admin@mydomain
+:mail_cc: &mail_cc_prod
+      - otheradmin@mydomain
+:period: 600
+:repeat: 999999
+:watchlist:
+  - :host: myhostapfap31-man
+    :name: Some good name 1
+    :core_dump_location:
+      - /usr/IBM/WebSphere/AppServer/profiles/Custom01
+  - :host: myhostapfap31-man
+    :name: Some good name 2
+    :core_dump_location:
+      - /usr/IBM/WebSphere/AppServer/profiles/Dmgr01
+

@@ -1,0 +1,4 @@
+#!/usr/bin/ksh
+
+ps -ef | grep "<%=params[:command]%>" | grep -v "grep <%=params[:command]%>"
+

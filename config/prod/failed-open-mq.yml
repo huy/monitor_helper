@@ -1,0 +1,19 @@
+:exclude: 
+:include: 
+  - :message: MQJMS2008
+:output: Stdout
+:period: 10
+:repeat: 0 
+:seconds_ago: 99999999
+:job_type: WatchExceptionJob
+
+:watchlist:
+  - :host: myhost1
+    :system_out_location:
+      - :path: /applogs/WAS/FCRLogs/AppServers/JVMLogs/SystemOut_Fcr11*.log
+      - :path: /applogs/WAS/FCRLogs/AppServers/JVMLogs/SystemOut_Fcr12*.log
+  - :host: myhost2
+    :system_out_location:
+      - :path: /applogs/WAS/FCRLogs/AppServers/JVMLogs/SystemOut_Fcr21*.log
+      - :path: /applogs/WAS/FCRLogs/AppServers/JVMLogs/SystemOut_Fcr22*.log
+

@@ -1,0 +1,18 @@
+--- detail of first 3 
+<%=
+params[:events][0..2].to_a.collect {|e|
+        "[#{e.timestamp}] #{e.source.servername} #{e.source.pid} #{e.thread_id} #{e.component} #{e.event_type} #{e.message_id}:\n#{e.message}"
+        }.join("\n\n")
+%>
+--- detail of last 3
+<%=
+params[:events][-3..-1].to_a.collect {|e|
+        "[#{e.timestamp}] #{e.source.servername} #{e.source.pid} #{e.thread_id} #{e.component} #{e.event_type} #{e.message_id}:\n#{e.message}"
+        }.join("\n\n")
+%>
+--- list of events header
+<%=
+params[:events].collect {|e|
+        "[#{e.timestamp}] #{e.source.servername} #{e.source.pid} #{e.thread_id} #{e.component} #{e.event_type} #{e.message_id}"
+        }.join("\n")
+%>    

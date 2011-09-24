@@ -1,0 +1,27 @@
+#!/usr/bin/ksh
+
+if [[ -z $script_root ]]; then
+    script_root=`dirname $0`
+fi
+
+mymail="<%= mymail %>"
+default_mail_to="<%= mail_to %>"
+default_mail_cc="<%= mail_cc.to_a.join(' ') %>"
+
+. $script_root/disk_pct_used.ksh
+. $script_root/files_exist.ksh
+. $script_root/move_to_backup.ksh
+. $script_root/alert_by_mail.ksh
+. $script_root/lack_of_fs_free_space.ksh
+
+echo $0 STARTS AT `date` 
+
+lack_of_fs_free_space "<%= mount_point%>"\
+		                   <%= pct_used%>\
+                      "<%= core_dump_location_list.join(' ') %>"\
+                      "<%= core_dump_pattern_list.join(' ') %>"\
+                      "<%= backup_location %>"\
+                      "<%= zip_command %>"
+echo $0 COMPLETES AT `date` 
+
+exit 0

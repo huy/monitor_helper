@@ -1,0 +1,79 @@
+:socket_port: 9985
+:mymail: monitoring@mydomain
+:mail_to: admin@mydomain
+:mail_cc: 
+      - otheradmin@mydomain
+      - someoneelse@mydomain
+:mail_body_template: erb/mail_body.erb
+:mail_subject_template: erb/jvm_subject.erb
+:period: 600
+:repeat: 999999
+:job_type: WatchExceptionJob
+:verbose: false
+:mail_body_template: erb/mail_body.erb
+:mail_subject_template: erb/jvm_subject.erb
+
+# send individual notification per event
+:significal:
+  :mail_body_template: erb/mail_body.erb
+  :mail_subject_template: erb/jvm_subject.erb
+  :events:
+    - :name: Server stopping
+      :filter:
+        - :event_type: A
+          :message_id: ADMN1021I
+    - :name: Server started
+      :filter:
+        - :event_type: A
+          :message_id: WSVR0001I
+    - :name: Server started with warning
+      :filter:
+        - :event_type: A
+          :message_id: WSVR0002I
+    - :name: WAS error
+      :filter:
+        - :event_type: F
+        - :event_type: E
+:exclude:
+  :name: Warning and important activities
+  :filter:
+    - :event_type: I # information
+    - :event_type: E # wellknown CleanupManagedConnection error
+      :message_id: J2CA0081E
+    - :event_type: O # standard output
+    - :event_type: A # TCP Channel started
+      :message_id: TCPC0001I
+    - :event_type: A # The Transport Channel Service started
+      :message_id: CHFW0019I
+    - :event_type: A # RMI Connector started
+      :message_id: ADMC0026I
+    - :event_type: A # Servlet Initialization
+      :message_id: SRVE0242I
+    - :event_type: A # Web module Initialization
+      :message_id: SRVE0169I
+    - :event_type: A # Stopping Web module
+      :message_id: WSVR0217I
+    - :event_type: A # Stopping Servlet
+      :message_id: SRVE0253I
+    - :event_type: A # Stopping Channel
+      :message_id: CHFW0020I
+    - :event_type: A # TCP Channel Stopped
+      :message_id: TCPC0002I
+    - :event_type: A # Application stopped
+      :message_id: WSVR0220I
+    - :event_type: A # Application started
+      :message_id: WSVR0221I
+
+
+:watchlist:
+  - :host: myhostapwsi33-man
+    :name: Some good name
+    :system_out_location:
+      - /applogs/SystemOut_11.log
+      - /applogs/SystemErr_11.log
+  - :host: myhostapwsi33-man
+    :name: Some other good name
+    :system_out_location:
+      - /applogs/SystemOut_12.log
+      - /applogs/SystemErr_12.log
+

@@ -1,0 +1,19 @@
+:exclude: 
+:include: 
+  - :message: OutOfMemory
+  - :message: CPU Starvation
+:output: Stdout
+:period: 10
+:repeat: 0 
+:seconds_ago: 2592000
+:job_type: WatchExceptionJob
+
+:watchlist:
+  - :host: myhost1
+    :system_out_location:
+      - :path: /applogs/SystemOut_11*.log
+      - :path: /applogs/SystemOut_12*.log
+  - :host: myhost2
+    :system_out_location:
+      - :path: /applogs/SystemOut_21*.log
+      - :path: /applogs/SystemOut_22*.log
